@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chúc Mừng Ngày Phụ Nữ Việt Nam 20/10 - Gửi Mẹ Yêu!</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@500;700&family=Great+Vibes&family=Montserrat:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --rose-pink: #f43f5e;
+            --pastel-pink: #ffe4e6;
+            --coral: #fb7185;
+            --gold: #d97706;
+            --gold-bright: #f59e0b;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #fff5f7 0%, #fed7aa 35%, #fce7f3 70%, #fff1f2 100%);
+            color: #334155;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-handwriting {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .font-dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        .font-brush {
+            font-family: 'Alex Brush', cursive;
+        }
+
+        /* Ambient Glow & Background Canvas */
+        #bg-canvas, #interaction-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #bg-canvas { z-index: 0; }
+        #interaction-canvas { z-index: 99; }
+
+        /* Bright & Vibrant Glassmorphism styling */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(244, 63, 94, 0.2);
+            box-shadow: 0 10px 40px -10px rgba(244, 63, 94, 0.15), 0 0 20px rgba(251, 113, 133, 0.1);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(244, 63, 94, 0.4);
+            box-shadow: 0 15px 45px -5px rgba(244, 63, 94, 0.25), inset 0 0 15px rgba(253, 230, 138, 0.4);
+        }
+
+        /* 3D Envelope Container */
+        .perspective-1000 {
+            perspective: 1200px;
+        }
+
+        .envelope-container {
+            position: relative;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .letter-content {
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease;
+        }
+
+        /* Glow animation for Bright Theme */
+        @keyframes brightGlow {
+            0%, 100% { text-shadow: 0 0 12px rgba(244, 63, 94, 0.3), 0 0 25px rgba(251, 146, 60, 0.2); }
+            50% { text-shadow: 0 0 22px rgba(244, 63, 94, 0.6), 0 0 35px rgba(245, 158, 11, 0.5); }
+        }
+
+        .bright-glow-text {
+            animation: brightGlow 3s infinite alternate;
+        }
+
+        /* SVG Vine & Flower Blooming animation */
+        .flower-path {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 3s ease-in-out;
+        }
+
+        .bloomed .flower-path {
+            stroke-dashoffset: 0;
+        }
+
+        /* Floating Corner Vines Animation */
+        @keyframes sway {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(3deg) scale(1.02); }
+        }
+
+        .vine-sway {
+            animation: sway 6s ease-in-out infinite;
+            transform-origin: top left;
+        }
+
+        .vine-sway-right {
+            animation: sway 7s ease-in-out infinite reverse;
+            transform-origin: top right;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fff0f3;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #fb7185;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #e11d48;
+        }
+    </style>
+</head>
+<body class="relative flex flex-col items-center justify-between min-h-screen select-none pb-12 overflow-x-hidden">
+
+    <!-- Background Canvas for Particles & Falling Petals -->
+    <canvas id="bg-canvas"></canvas>
+    <!-- Foreground Interaction Canvas for Floating Hearts & Sparkles -->
+    <canvas id="interaction-canvas"></canvas>
+
+    <!-- Decorative Corner Floral Vines (Top-Left & Top-Right Decorative SVG) -->
+    <div class="fixed top-0 left-0 w-48 md:w-72 pointer-events-none z-20 vine-sway opacity-90">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Vine stems -->
+            <path d="M-10,-10 C50,40 30,120 110,140 C140,148 160,120 180,160" stroke="#15803d" stroke-width="3" stroke-linecap="round"/>
+            <path d="M-10,30 C30,70 90,50 120,90" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            <!-- Vine Leaves -->
+            <path d="M30,35 C20,20 40,15 45,25 C50,35 35,45 30,35 Z" fill="#4ade80"/>
+            <path d="M70,80 C60,65 80,60 85,70 C90,80 75,90 70,80 Z" fill="#22c55e"/>
+            <path d="M115,120 C105,105 125,100 130,110 C135,120 120,130 115,120 Z" fill="#16a34a"/>
+            <!-- Blooming Flowers -->
+            <circle cx="110" cy="140" r="10" fill="#f43f5e"/>
+            <circle cx="110" cy="140" r="4" fill="#fef08a"/>
+            <circle cx="120" cy="90" r="8" fill="#fb7185"/>
+            <circle cx="120" cy="90" r="3" fill="#ffffff"/>
+            <circle cx="180" cy="160" r="7" fill="#e11d48"/>
+        </svg>
+    </div>
+
+    <div class="fixed top-0 right-0 w-48 md:w-72 pointer-events-none z-20 vine-sway-right opacity-90">
+        <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="transform scale-x-[-1]">
+            <path d="M-10,-10 C50,40 30,120 110,140 C140,148 160,120 180,160" stroke="#15803d" stroke-width="3" stroke-linecap="round"/>
+            <path d="M-10,30 C30,70 90,50 120,90" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/>
+            <path d="M30,35 C20,20 40,15 45,25 C50,35 35,45 30,35 Z" fill="#4ade80"/>
+            <path d="M70,80 C60,65 80,60 85,70 C90,80 75,90 70,80 Z" fill="#22c55e"/>
+            <circle cx="110" cy="140" r="10" fill="#f43f5e"/>
+            <circle cx="110" cy="140" r="4" fill="#fef08a"/>
+            <circle cx="120" cy="90" r="8" fill="#fb7185"/>
+        </svg>
+    </div>
+
+    <!-- Music Player Controller Floating Button -->
+    <div class="fixed top-5 right-5 z-50 flex items-center space-x-3">
+        <button id="music-toggle" class="glass-card flex items-center justify-center w-12 h-12 rounded-full text-rose-600 hover:text-rose-700 hover:scale-110 active:scale-95 transition-all duration-300 shadow-md">
+            <i id="music-icon" class="fa-solid fa-music text-xl animate-pulse"></i>
+        </button>
+    </div>
+
+    <!-- Main Wrapper -->
+    <main class="relative z-10 w-full max-w-4xl px-4 pt-8 flex flex-col items-center">
+
+        <!-- Header Section -->
+        <header class="text-center mb-8 space-y-3">
+            <div class="inline-block px-5 py-2 rounded-full glass-card border border-rose-300 text-rose-600 text-xs md:text-sm tracking-widest uppercase font-bold mb-2 shadow-sm">
+                <i class="fa-solid fa-heart text-rose-500 mr-2 animate-bounce"></i>20 Tháng 10 • Ngày Phụ Nữ Việt Nam
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight font-dancing bright-glow-text text-transparent bg-clip-text bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500">
+                Chúc Mừng 20/10 Mẹ Yêu Thương!
+            </h1>
+            <p class="text-slate-600 text-sm md:text-base max-w-xl mx-auto font-medium leading-relaxed">
+                Gửi tới Mẹ – người phụ nữ tuyệt vời nhất cuộc đời con, ngàn lời yêu thương và lòng biết ơn vô hạn.
+            </p>
+        </header>
+
+        <!-- 3D Interactive Greeting Envelope Section -->
+        <section class="w-full flex justify-center items-center my-4 perspective-1000">
+            <div id="envelope-wrapper" class="relative w-full max-w-xl cursor-pointer group">
+                
+                <!-- Vibrant Glowing Aura backdrop -->
+                <div class="absolute -inset-2 bg-gradient-to-r from-rose-400 via-amber-300 to-pink-400 rounded-3xl blur-xl opacity-70 group-hover:opacity-100 transition duration-700 group-hover:duration-200"></div>
+
+                <!-- Main Card Container -->
+                <div id="envelope" class="relative envelope-container w-full bg-white/90 rounded-3xl border-2 border-rose-200 p-6 md:p-10 shadow-2xl backdrop-blur-md overflow-hidden">
+                    
+                    <!-- Decorative Embedded Floral Vines Background inside Envelope -->
+                    <svg id="svg-flowers" class="absolute inset-0 w-full h-full pointer-events-none opacity-30 z-0" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="flower-path" d="M10,490 C100,380 120,220 250,220 C380,220 400,80 490,10" stroke="#f43f5e" stroke-width="3" fill="none"/>
+                        <path class="flower-path" d="M490,490 C380,380 250,350 250,220 C250,100 100,80 10,10" stroke="#f59e0b" stroke-width="3" fill="none"/>
+                        <!-- Blossom circles -->
+                        <circle cx="250" cy="220" r="10" fill="#fb7185" class="flower-path"/>
+                        <circle cx="250" cy="220" r="4" fill="#fef08a" class="flower-path"/>
+                        <circle cx="120" cy="220" r="8" fill="#f43f5e" class="flower-path"/>
+                        <circle cx="380" cy="220" r="8" fill="#f43f5e" class="flower-path"/>
+                    </svg>
+
+                    <!-- Unopened Prompt State -->
+                    <div id="envelope-prompt" class="relative z-10 flex flex-col items-center justify-center py-10 text-center space-y-4">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-rose-500 via-pink-500 to-amber-400 flex items-center justify-center shadow-lg shadow-rose-400/40 transform group-hover:scale-110 transition-transform duration-300">
+                            <i class="fa-solid fa-envelope-open-text text-3xl text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl md:text-3xl font-bold font-dancing text-rose-600">Chạm nhẹ để mở thiệp gửi Mẹ</h3>
+                            <p class="text-xs md:text-sm text-slate-500 mt-1">Bức thư chứa đựng tình cảm chân thành nhất dành tặng Mẹ</p>
+                        </div>
+                        <span class="inline-flex items-center px-5 py-2 rounded-full text-xs md:text-sm font-semibold bg-rose-50 text-rose-600 border border-rose-200 shadow-sm animate-bounce">
+                            <i class="fa-solid fa-hand-pointer mr-2 text-rose-500"></i> Mở Thiệp Chúc Mừng
+                        </span>
+                    </div>
+
+                    <!-- Opened Letter State (Hidden initially) -->
+                    <div id="letter-content" class="letter-content hidden relative z-10 opacity-0 transform translate-y-4">
+                        <!-- Letter Header -->
+                        <div class="border-b border-rose-200 pb-3 mb-4 flex justify-between items-center">
+                            <span class="text-xs font-bold tracking-wider text-rose-600 uppercase">Thư Gửi Mẹ Yêu • 20/10</span>
+                            <i class="fa-solid fa-heart text-rose-500 animate-pulse text-lg"></i>
+                        </div>
+
+                        <!-- Typewriter Text Area -->
+                        <div class="space-y-4 text-slate-700 text-base md:text-lg leading-relaxed font-normal min-h-[220px]">
+                            <p id="typewriter-line-1" class="font-handwriting text-3xl md:text-4xl text-rose-600 leading-snug font-bold"></p>
+                            <p id="typewriter-line-2" class="text-slate-700 leading-relaxed"></p>
+                            <p id="typewriter-line-3" class="text-slate-600 italic text-sm md:text-base border-l-4 border-rose-400/60 pl-3 py-1 bg-rose-50/50 rounded-r-lg"></p>
+                            <p id="typewriter-line-4" class="font-dancing text-2xl text-rose-600 text-right font-bold pt-2"></p>
+                        </div>
+
+                        <!-- Bottom Action Inside Letter -->
+                        <div class="mt-8 pt-4 border-t border-rose-200 flex flex-wrap gap-3 justify-center">
+                            <button id="btn-gift" class="px-6 py-3 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold text-sm shadow-lg shadow-rose-400/40 hover:shadow-rose-500/60 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center space-x-2">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                <span>Thả Mưa Hoa & Tim Bùng Nổ</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Hint Section -->
+        <div class="mt-8 text-center text-slate-500 text-xs md:text-sm">
+            <p class="flex items-center justify-center space-x-2 font-medium">
+                <i class="fa-solid fa-sparkles text-amber-500"></i>
+                <span>Chạm hoặc nhấp chuột vào bất kỳ đâu để tạo hiệu ứng tim & hoa rực rỡ</span>
+            </p>
+        </div>
+
+    </main>
+
+    <!-- Footer with Email Credit -->
+    <footer class="relative z-10 text-center text-slate-500 text-xs md:text-sm mt-10 space-y-1">
+        <p class="font-medium text-slate-600">Gửi trọn yêu thương nhân ngày Phụ Nữ Việt Nam 20/10 • Dành tặng Mẹ yêu</p>
+        <p class="text-slate-400 text-xs">
+            Created with <i class="fa-solid fa-heart text-rose-500"></i> | Contact: 
+            <a href="mailto:lhungthinh149@gmail.com" class="text-rose-500 hover:underline font-medium">lhugnthinh149@gmail.com</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript Engine -->
+    <script>
+        /* ===================================================================
+           1. CANVAS BACKGROUND: BRIGHT VIBRANT PARTICLES & FALLING PETALS
+           =================================================================== */
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        const interCanvas = document.getElementById('interaction-canvas');
+        const interCtx = interCanvas.getContext('2d');
+
+        let width = bgCanvas.width = interCanvas.width = window.innerWidth;
+        let height = bgCanvas.height = interCanvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = bgCanvas.width = interCanvas.width = window.innerWidth;
+            height = bgCanvas.height = interCanvas.height = window.innerHeight;
+        });
+
+        // Vibrant Petal & Sparkle Particles
+        const particles = [];
+        const particleCount = 70;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * -height;
+                this.size = Math.random() * 9 + 4;
+                this.speedY = Math.random() * 1.6 + 0.6;
+                this.speedX = Math.random() * 1.2 - 0.6;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.7 + 0.3;
+                this.type = Math.random() > 0.35 ? 'petal' : 'sparkle';
+                // Bright color palette: Rose, Coral, Warm Gold, Soft Pink
+                const colors = ['#f43f5e', '#fb7185', '#f59e0b', '#ec4899', '#f43f5e'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += Math.sin(this.y * 0.01) + this.speedX;
+                this.rotation += this.rotationSpeed;
+
+                if (this.y > height + 20) {
+                    this.reset();
+                    this.y = -10;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate((this.rotation * Math.PI) / 180);
+                ctx.globalAlpha = this.opacity;
+
+                if (this.type === 'petal') {
+                    // Draw Blooming Flower Petal
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.moveTo(0, 0);
+                    ctx.bezierCurveTo(-this.size, -this.size, -this.size * 1.4, this.size / 2, 0, this.size * 1.4);
+                    ctx.bezierCurveTo(this.size * 1.4, this.size / 2, this.size, -this.size, 0, 0);
+                    ctx.fill();
+                } else {
+                    // Draw Golden Sparkle Star
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.shadowBlur = 8;
+                    ctx.shadowColor = '#fbbf24';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size / 2.8, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        /* ===================================================================
+           2. INTERACTIVE CLICK EFFECTS (Vibrant Hearts & Burst)
+           =================================================================== */
+        const clickEffects = [];
+
+        class ClickEffect {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 18 + 12;
+                this.speedX = (Math.random() - 0.5) * 6;
+                this.speedY = (Math.random() - 0.5) * 6 - 2;
+                this.opacity = 1;
+                this.gravity = 0.08;
+                // Bright Coral to Rose hues
+                this.color = `hsl(${Math.random() * 40 + 330}, 95%, 60%)`;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.speedY += this.gravity;
+                this.opacity -= 0.02;
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.fillStyle = this.color;
+                
+                // Draw Heart Shape
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(0, topCurveHeight);
+                ctx.bezierCurveTo(0, 0, -this.size / 2, 0, -this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(-this.size / 2, (this.size + topCurveHeight) / 2, 0, this.size, 0, this.size);
+                ctx.bezierCurveTo(0, this.size, this.size / 2, (this.size + topCurveHeight) / 2, this.size / 2, topCurveHeight);
+                ctx.bezierCurveTo(this.size / 2, 0, 0, 0, 0, topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target.closest('button') || e.target.closest('#envelope-wrapper')) return;
+
+            for (let i = 0; i < 10; i++) {
+                clickEffects.push(new ClickEffect(e.clientX, e.clientY));
+            }
+        });
+
+        // Animation Loop
+        function animateCanvas() {
+            bgCtx.clearRect(0, 0, width, height);
+            interCtx.clearRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw(bgCtx);
+            });
+
+            for (let i = clickEffects.length - 1; i >= 0; i--) {
+                clickEffects[i].update();
+                clickEffects[i].draw(interCtx);
+                if (clickEffects[i].opacity <= 0) {
+                    clickEffects.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(animateCanvas);
+        }
+        animateCanvas();
+
+        /* ===================================================================
+           3. WEB AUDIO API: SYNTHESIZED SOFT PIANO MELODY
+           =================================================================== */
+        class SoftPianoEngine {
+            constructor() {
+                this.audioCtx = null;
+                this.isPlaying = false;
+                this.timer = null;
+                // Soft Pentatonic Chord Frequencies (Hz)
+                this.notes = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
+            }
+
+            init() {
+                if (!this.audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new AudioContext();
+                }
+            }
+
+            playNote(freq) {
+                if (!this.audioCtx || !this.isPlaying) return;
+
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, this.audioCtx.currentTime);
+
+                gain.gain.setValueAtTime(0.001, this.audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.12, this.audioCtx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.0001, this.audioCtx.currentTime + 2.5);
+
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+
+                osc.start();
+                osc.stop(this.audioCtx.currentTime + 2.6);
+            }
+
+            startMelody() {
+                this.init();
+                if (this.audioCtx.state === 'suspended') {
+                    this.audioCtx.resume();
+                }
+                this.isPlaying = true;
+                let step = 0;
+
+                const playStep = () => {
+                    if (!this.isPlaying) return;
+                    const note = this.notes[Math.floor(Math.random() * this.notes.length)];
+                    this.playNote(note);
+
+                    if (step % 2 === 0) {
+                        setTimeout(() => {
+                            if (this.isPlaying) this.playNote(this.notes[0] / 2);
+                        }, 200);
+                    }
+
+                    step++;
+                    const nextInterval = [600, 800, 1000, 1200][Math.floor(Math.random() * 4)];
+                    this.timer = setTimeout(playStep, nextInterval);
+                };
+
+                playStep();
+            }
+
+            stopMelody() {
+                this.isPlaying = false;
+                if (this.timer) clearTimeout(this.timer);
+            }
+        }
+
+        const piano = new SoftPianoEngine();
+        const musicBtn = document.getElementById('music-toggle');
+        const musicIcon = document.getElementById('music-icon');
+
+        musicBtn.addEventListener('click', () => {
+            if (piano.isPlaying) {
+                piano.stopMelody();
+                musicIcon.className = 'fa-solid fa-music-slash text-xl text-slate-400';
+            } else {
+                piano.startMelody();
+                musicIcon.className = 'fa-solid fa-music text-xl text-rose-600 animate-pulse';
+            }
+        });
+
+        /* ===================================================================
+           4. INTERACTIVE 3D ENVELOPE OPENING & TYPEWRITER EFFECT
+           =================================================================== */
+        const envelopeWrapper = document.getElementById('envelope-wrapper');
+        const envelopePrompt = document.getElementById('envelope-prompt');
+        const letterContent = document.getElementById('letter-content');
+        const svgFlowers = document.getElementById('svg-flowers');
+
+        let isOpened = false;
+
+        const letterLines = [
+            "Mẹ Kính Yêu Của Bo,",
+            "Hôm nay 20/10, Bo thấy mọi người đều có quà tặng mẹ, còn Bo vẫn chưa có gì dành cho mẹ cả, Bo còn nghĩ rằng tối nay sẽ đc đi ăn quán nhưng chỉ thấy mẹ vs Bo ở nhà . Vì vậy, Bo muốn tự tay chuẩn bị một món quà nhỏ bằng chính những gì Bo vừa học được, thay cho lời yêu thương mà đôi khi Bo chưa nói thành lời",
+            "Mong Mẹ của con luôn dồi dào sức khỏe, tràn ngập niềm vui. Bo chúc mẹ luôn mạnh khỏe, vui vẻ và hạnh phúc. Cảm ơn mẹ vì đã luôn yêu thương và để ý tới cho Bo. Bo sẽ cố gắng trưởng thành hơn để mẹ có thể tự hào về Bo.",
+            "Bo yêu Mẹ rất nhiều! ❤️"
+        ];
+
+        envelopeWrapper.addEventListener('click', function openEnvelope() {
+            if (isOpened) return;
+            isOpened = true;
+
+            if (!piano.isPlaying) {
+                piano.startMelody();
+                musicIcon.className = 'fa-solid fa-music text-xl text-rose-600 animate-pulse';
+            }
+
+            svgFlowers.classList.add('bloomed');
+
+            envelopePrompt.style.display = 'none';
+            letterContent.classList.remove('hidden');
+            
+            setTimeout(() => {
+                letterContent.classList.remove('opacity-0', 'translate-y-4');
+                startTypewriter();
+            }, 100);
+
+            // Confetti Burst on Open
+            confetti({
+                particleCount: 70,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#f43f5e', '#fb7185', '#f59e0b', '#ffffff']
+            });
+        });
+
+        // Typewriter Effect
+        function startTypewriter() {
+            let lineIndex = 0;
+            let charIndex = 0;
+
+            function typeNextChar() {
+                if (lineIndex < letterLines.length) {
+                    const currentLineText = letterLines[lineIndex];
+                    const targetElement = document.getElementById(`typewriter-line-${lineIndex + 1}`);
+
+                    if (charIndex < currentLineText.length) {
+                        targetElement.textContent += currentLineText.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(typeNextChar, 35);
+                    } else {
+                        lineIndex++;
+                        charIndex = 0;
+                        setTimeout(typeNextChar, 300);
+                    }
+                }
+            }
+
+            typeNextChar();
+        }
+
+        /* ===================================================================
+           5. SPECIAL GIFT BUTTON: MASSIVE CONFETTI & HEART EXPLOSION
+           =================================================================== */
+        const btnGift = document.getElementById('btn-gift');
+
+        btnGift.addEventListener('click', (e) => {
+            e.stopPropagation();
+
+            // Burst 1: Bright Colorful Confetti
+            confetti({
+                particleCount: 120,
+                spread: 100,
+                origin: { y: 0.5 },
+                colors: ['#f43f5e', '#fb7185', '#f59e0b', '#ec4899']
+            });
+
+            // Burst 2: Side Streams
+            setTimeout(() => {
+                confetti({
+                    particleCount: 90,
+                    angle: 60,
+                    spread: 80,
+                    origin: { x: 0 },
+                    colors: ['#f43f5e', '#fb7185', '#fef08a']
+                });
+                confetti({
+                    particleCount: 90,
+                    angle: 120,
+                    spread: 80,
+                    origin: { x: 1 },
+                    colors: ['#f43f5e', '#fb7185', '#fef08a']
+                });
+            }, 200);
+
+            const rect = btnGift.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 30; i++) {
+                clickEffects.push(new ClickEffect(centerX, centerY));
+            }
+        });
+    </script>
+</body>
+</html>
